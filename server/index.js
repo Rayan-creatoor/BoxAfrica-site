@@ -16,9 +16,11 @@ if (!GEMINI_API_KEY) {
   process.exit(1);
 }
 
-// Modèle du palier gratuit de l'API Gemini (250 requêtes/jour, 10/min au moment de l'écriture).
-// Alternative avec un quota plus large mais un cran de qualité en moins : gemini-2.5-flash-lite.
-const MODEL = "gemini-2.5-flash";
+// Modèle du palier gratuit de l'API Gemini (1500 requêtes/jour, 10/min au moment de l'écriture).
+// Google fait évoluer cette gamme rapidement : si ce modèle renvoie une erreur 404
+// "no longer available", vérifiez le modèle recommandé sur https://ai.google.dev/gemini-api/docs/models
+// Alternative avec un quota plus large mais un cran de qualité en moins : gemini-3.1-flash-lite.
+const MODEL = "gemini-3.5-flash";
 const MAX_TOKENS = 1000;
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 4000;
