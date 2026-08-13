@@ -3,7 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Petit serveur Express qui relaie les requêtes du ChatWidget vers l'API Anthropic, sans jamais exposer la clé API au navigateur.",
+  "description": "Petit serveur Express qui relaie les requêtes du ChatWidget vers l'API Gemini, sans jamais exposer la clé API au navigateur.",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js"

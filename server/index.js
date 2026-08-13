@@ -3,20 +3,22 @@ import express from "express";
 import cors from "cors";
 
 const PORT = process.env.PORT || 8787;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || "http://localhost:5173")
   .split(",")
   .map((o) => o.trim())
   .filter(Boolean);
 
-if (!ANTHROPIC_API_KEY) {
+if (!GEMINI_API_KEY) {
   console.error(
-    "ANTHROPIC_API_KEY manquante. Copiez server/.env.example vers server/.env et renseignez votre clé."
+    "GEMINI_API_KEY manquante. Copiez server/.env.example vers server/.env et renseignez votre clé (gratuite sur aistudio.google.com/apikey)."
   );
   process.exit(1);
 }
 
-const MODEL = "claude-haiku-4-5-20251001";
+// Modèle du palier gratuit de l'API Gemini (250 requêtes/jour, 10/min au moment de l'écriture).
+// Alternative avec un quota plus large mais un cran de qualité en moins : gemini-2.5-flash-lite.
+const MODEL = "gemini-2.5-flash";
 const MAX_TOKENS = 1000;
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 4000;
@@ -96,29 +98,42 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_TOKENS,
-        system: SYSTEM_PROMPT,
-        messages: messages.map((m) => ({ role: m.role, content: m.content })),
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-goog-api-key": GEMINI_API_KEY,
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          // Gemini attend le rôle "model" pour les réponses de l'assistant (pas "assistant").
+          contents: messages.map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          })),
+          generationConfig: { maxOutputTokens: MAX_TOKENS },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error("Erreur API Anthropic:", response.status, detail);
+      console.error("Erreur API Gemini:", response.status, detail);
       return res.status(502).json({ error: "Le service de chat est momentanément indisponible." });
     }
 
     const data = await response.json();
-    const reply = data.content?.find((block) => block.type === "text")?.text || "";
+    const candidate = data.candidates?.[0];
+    const reply = candidate?.content?.parts?.map((p) => p.text).join("") || "";
+
+    if (!reply) {
+      // Réponse vide : le plus souvent un blocage par les filtres de sécurité de Gemini.
+      console.error("Réponse Gemini vide, finishReason:", candidate?.finishReason);
+      return res.status(502).json({ error: "L'assistant n'a pas pu répondre à cette question." });
+    }
+
     res.json({ reply });
   } catch (err) {
     console.error("Erreur serveur /api/chat:", err);
