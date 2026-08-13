@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5183/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5183/services)",
+      "Bash(curl -s http://localhost:5183/src/pages/Home.jsx)",
+      "Bash(curl -s http://localhost:5183/services)",
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code}\\\\n\" http://localhost:5184/)",
+      "Bash(curl -s -o /dev/null -w \"services:%{http_code}\\\\n\" http://localhost:5184/services)",
+      "Bash(curl -s -o /dev/null -w \"academy:%{http_code}\\\\n\" http://localhost:5184/academy)",
+      "Bash(curl -s -o /dev/null -w \"home:%{http_code}\\\\n\" http://localhost:5185/)",
+      "Bash(curl -s -o /dev/null -w \"services:%{http_code}\\\\n\" http://localhost:5185/services)",
+      "Bash(curl -s -o /dev/null -w \"academy:%{http_code}\\\\n\" http://localhost:5185/academy)",
+      "Bash(curl -s -o /dev/null -w \"proxy:%{http_code}\\\\n\" http://localhost:5185/proxy)",
+      "Bash(taskkill //F //IM node.exe)"
+    ]
+  }
+}

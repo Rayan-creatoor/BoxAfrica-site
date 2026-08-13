@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Box.Africa — Entreprise de Services Numérique en Afrique de l'Ouest. Développement, infrastructure, cybersécurité et formation." />
+    <title>Box.Africa — Transformer l'Afrique par l'IT</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+      body { font-family: 'Century Gothic', 'Jost', 'Questrial', system-ui, sans-serif; }
+      #boot-splash {
+        position: fixed; inset: 0; z-index: 99999; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+        background: #000000;
+      }
+      #boot-splash .boot-mesh {
+        position: absolute; inset: -20%;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(79,124,255,.18), transparent 42%),
+          radial-gradient(circle at 30% 70%, rgba(212,162,76,.12), transparent 38%),
+          radial-gradient(circle at 72% 28%, rgba(79,124,255,.10), transparent 40%);
+        filter: blur(30px);
+        animation: boot-breathe 4.5s ease-in-out infinite;
+      }
+      @keyframes boot-breathe {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: .85; }
+        50% { transform: scale(1.18) rotate(6deg); opacity: 1; }
+      }
+      #boot-splash .boot-stage {
+        position: relative; z-index: 1; width: 148px; height: 148px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      #boot-splash .boot-orbit { position: absolute; inset: 0; animation: boot-spin 5s linear infinite; }
+      #boot-splash .boot-ring {
+        position: absolute; width: 104px; height: 104px; border-radius: 50%;
+        border: 1px dashed rgba(212,162,76,.45);
+        animation: boot-spin 6s linear infinite reverse;
+      }
+      #boot-splash .boot-dot {
+        position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; border-radius: 50%;
+        background: var(--c, #ffffff); box-shadow: 0 0 10px 1px var(--c, #ffffff);
+        transform: rotate(var(--a)) translateX(70px);
+      }
+      #boot-splash .boot-hex { position: relative; width: 76px; height: 76px; z-index: 1; }
+      #boot-splash .boot-hex svg { width: 100%; height: 100%; overflow: visible; }
+      #boot-splash .boot-hex line {
+        stroke-linecap: round; stroke-width: 4.5; fill: none;
+        stroke-dasharray: var(--len);
+        animation: boot-draw 2.6s cubic-bezier(.65,0,.35,1) infinite;
+      }
+      #boot-splash .boot-hex .glow {
+        position: absolute; inset: -18px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(79,124,255,.35), transparent 70%);
+        animation: boot-glow 2.6s ease-in-out infinite;
+      }
+      #boot-splash img {
+        position: absolute; width: 30px; height: 30px; object-fit: contain;
+        filter: brightness(0) invert(1) drop-shadow(0 0 14px rgba(255,255,255,.7));
+        animation: boot-mark 2.6s cubic-bezier(.65,0,.35,1) infinite;
+      }
+      @keyframes boot-spin { to { transform: rotate(360deg); } }
+      @keyframes boot-draw {
+        0%, 8% { stroke-dashoffset: var(--len); }
+        38%, 82% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: calc(var(--len) * -1); }
+      }
+      @keyframes boot-glow { 0%, 30% { opacity: 0; transform: scale(.6); } 45%, 85% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(.6); } }
+      @keyframes boot-mark {
+        0%, 30% { opacity: 0; transform: scale(.3) rotate(-40deg); }
+        45%, 82% { opacity: 1; transform: scale(1) rotate(0deg); }
+        100% { opacity: 0; transform: scale(.3) rotate(20deg); }
+      }
+      #boot-splash .boot-label {
+        position: relative; z-index: 1;
+        font-size: 12px; font-weight: 600;
+        letter-spacing: .28em; text-transform: uppercase;
+        background: linear-gradient(90deg, #999999 0%, #ffffff 22%, #d4a24c 42%, #ffffff 62%, #999999 100%);
+        background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
+        animation: boot-shimmer 2.6s linear infinite;
+      }
+      @keyframes boot-shimmer { 0% { background-position: 0% 0; } 100% { background-position: -220% 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-splash * { animation: none !important; }
+        #boot-splash .boot-hex line { stroke-dashoffset: 0; }
+        #boot-splash img, #boot-splash .boot-hex .glow { opacity: 1; transform: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="boot-splash" role="status" aria-label="Chargement de Box.Africa">
+        <div class="boot-mesh"></div>
+        <div class="boot-stage">
+          <div class="boot-orbit">
+            <span class="boot-dot" style="--a:0deg; --c:#4f7cff"></span>
+            <span class="boot-dot" style="--a:60deg; --c:#d4a24c"></span>
+            <span class="boot-dot" style="--a:120deg; --c:#4f7cff"></span>
+            <span class="boot-dot" style="--a:180deg; --c:#d4a24c"></span>
+            <span class="boot-dot" style="--a:240deg; --c:#4f7cff"></span>
+            <span class="boot-dot" style="--a:300deg; --c:#d4a24c"></span>
+          </div>
+          <div class="boot-ring"></div>
+          <div class="boot-hex">
+            <div class="glow"></div>
+            <svg viewBox="0 0 100 100">
+              <line x1="55.6" y1="11.36" x2="79.4" y2="25.64" stroke="#d4a24c" style="--len:28" />
+              <line x1="85" y1="35.72" x2="85" y2="64.28" stroke="#4f7cff" style="--len:29" />
+              <line x1="79.4" y1="74.36" x2="55.6" y2="88.64" stroke="#4f7cff" style="--len:28" />
+              <line x1="44.4" y1="88.64" x2="20.6" y2="74.36" stroke="#4f7cff" style="--len:28" />
+              <line x1="15" y1="64.28" x2="15" y2="35.72" stroke="#d4a24c" style="--len:29" />
+              <line x1="20.6" y1="25.64" x2="44.4" y2="11.36" stroke="#d4a24c" style="--len:28" />
+              <line x1="50" y1="8" x2="50" y2="44" stroke="#d4a24c" style="--len:36" />
+              <line x1="50" y1="56" x2="50" y2="92" stroke="#4f7cff" style="--len:36" />
+            </svg>
+            <img src="/boxafrica-box.png" alt="" />
+          </div>
+        </div>
+        <span class="boot-label">Box.Africa</span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
