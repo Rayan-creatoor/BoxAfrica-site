@@ -13,7 +13,7 @@ export const SERVICE_ICONS = {
 export const BOXAFRICA_LOGO = "/boxafrica-logo.png";
 export const BOXAFRICA_BOX = "/boxafrica-box.png";
 
-export const CONTACT_EMAIL = "ali-mohammad.sanou@uir.ac.ma";
+export const CONTACT_EMAIL = "info@box.africa";
 export const COMPANY_PHONE = "06 48 11 11";
 export const COMPANY_PHONE_HREF = `tel:${COMPANY_PHONE.replace(/\s+/g, "")}`;
 export const COMPANY_ADDRESS = ["09 BP 157", "Ouagadougou 09", "Burkina Faso"];
