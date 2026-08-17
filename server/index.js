@@ -122,6 +122,45 @@ function isRateLimited(ip) {
   return timestamps.length > RATE_LIMIT_MAX_REQUESTS;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Gemini renvoie parfois 503 "UNAVAILABLE" (forte demande, temporaire selon Google)
+// ou 429 (quota atteint) : on retente quelques fois avec un court délai avant d'abandonner.
+const GEMINI_RETRY_DELAYS_MS = [1500, 3000, 5000];
+
+async function callGemini(messages) {
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-goog-api-key": GEMINI_API_KEY,
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          // Gemini attend le rôle "model" pour les réponses de l'assistant (pas "assistant").
+          contents: messages.map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          })),
+          generationConfig: { maxOutputTokens: MAX_TOKENS },
+        }),
+      }
+    );
+
+    if (response.ok || (response.status !== 503 && response.status !== 429) || attempt >= GEMINI_RETRY_DELAYS_MS.length) {
+      return response;
+    }
+
+    console.warn(`Gemini a répondu ${response.status}, nouvelle tentative dans ${GEMINI_RETRY_DELAYS_MS[attempt]}ms…`);
+    await sleep(GEMINI_RETRY_DELAYS_MS[attempt]);
+  }
+}
+
 app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
@@ -153,25 +192,7 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY,
-        },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          // Gemini attend le rôle "model" pour les réponses de l'assistant (pas "assistant").
-          contents: messages.map((m) => ({
-            role: m.role === "assistant" ? "model" : "user",
-            parts: [{ text: m.content }],
-          })),
-          generationConfig: { maxOutputTokens: MAX_TOKENS },
-        }),
-      }
-    );
+    const response = await callGemini(messages);
 
     if (!response.ok) {
       const detail = await response.text();

@@ -5,9 +5,10 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8787/api/chat";
 
 // Le serveur (plan gratuit) peut se mettre en veille et mettre jusqu'à ~50s à se
-// réveiller — si la requête échoue au niveau réseau (coupure pendant le réveil), on
-// retente plusieurs fois avec un délai croissant, pour couvrir toute cette fenêtre.
-const REQUEST_TIMEOUT_MS = 20000;
+// réveiller, et le serveur lui-même retente déjà plusieurs fois auprès de Gemini en
+// cas de surcharge (jusqu'à ~10s) — on laisse une marge confortable avant d'abandonner
+// côté client, et on retente aussi en cas de coupure réseau pure.
+const REQUEST_TIMEOUT_MS = 30000;
 const RETRY_DELAYS_MS = [3000, 6000, 10000, 15000];
 const SLOW_HINT_DELAY_MS = 5000;
 
