@@ -16,6 +16,8 @@ import {
   PROXY_STEPS,
   PROXY_SUPPORT_LEVELS,
   PROXY_AUDIENCE,
+  PROXY_ZONES,
+  PROXY_SUPPORT_SERVICES,
 } from "../data/proxy.js";
 
 const MOSAIC = [
@@ -186,6 +188,68 @@ export default function Proxy() {
               <p>{lvl.description}</p>
               <ul>
                 {lvl.items.map((it) => (
+                  <li key={it}>{it}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Présence territoriale */}
+      <section className="ba-section" id="zones">
+        <div className="ba-section-head" data-reveal>
+          <span className="ba-eyebrow ba-mono">
+            <span className="ba-eyebrow-icon">
+              <img src={THEME_ICONS.location} alt="" loading="lazy" />
+            </span>
+            Présence nationale
+          </span>
+          <h2>Une équipe d'intervention proche de vous, partout au Burkina Faso</h2>
+          <p className="ba-section-sub">
+            Le territoire est couvert par 6 zones d'intervention, chacune avec ses points focaux
+            résidents dédiés — pour une prise en charge rapide, où que se trouve votre site.
+          </p>
+        </div>
+        <div className="ba-prx-zones-grid">
+          {PROXY_ZONES.map((z) => (
+            <div className="ba-prx-zone-card" key={z.zone} data-reveal>
+              <span className="ba-prx-zone-badge">Zone {z.zone}</span>
+              <ul>
+                {z.localities.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Support & Assistance : Délégation et Services managés */}
+      <section className="ba-section" id="support-assistance">
+        <div className="ba-section-head" data-reveal>
+          <span className="ba-eyebrow ba-mono">
+            <span className="ba-eyebrow-icon">
+              <img src={THEME_ICONS.promise} alt="" loading="lazy" />
+            </span>
+            Support &amp; Assistance
+          </span>
+          <h2>Au-delà de l'incident : renfort d'équipe et exploitation déléguée</h2>
+          <p className="ba-section-sub">
+            Deux offres complémentaires à Proxy pour couvrir tous vos besoins de support IT au
+            quotidien.
+          </p>
+        </div>
+        <div className="ba-prx-support-grid">
+          {PROXY_SUPPORT_SERVICES.map((s) => (
+            <div className="ba-prx-support-card" id={s.slug} key={s.slug} data-reveal>
+              <img className="ba-prx-support-photo" src={s.image} alt="" loading="lazy" />
+              <div className="ba-prx-support-icon">
+                <img src={s.icon} alt="" loading="lazy" />
+              </div>
+              <h3>{s.title}</h3>
+              <ul>
+                {s.items.map((it) => (
                   <li key={it}>{it}</li>
                 ))}
               </ul>

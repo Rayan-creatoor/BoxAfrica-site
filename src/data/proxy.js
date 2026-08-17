@@ -1,4 +1,4 @@
-import { TECH_PHOTOS } from "./content.js";
+import { TECH_PHOTOS, SERVICE_ICONS, SERVICE_PHOTOS } from "./content.js";
 
 export const PROXY_PHOTOS = {
   hero: TECH_PHOTOS.proxyBg,
@@ -129,4 +129,46 @@ export const PROXY_AUDIENCE = [
   "Directions IT sans astreinte interne",
   "Sites distants / multi-agences",
   "Administrations publiques",
+];
+
+// Zones d'intervention Proxy — couverture du territoire national par nos équipes
+// de points focaux résidents.
+export const PROXY_ZONES = [
+  { zone: 1, localities: ["Ouagadougou", "Ziniaré", "Manga", "Pô", "Léo", "Kombissiri"] },
+  { zone: 2, localities: ["Bobo-Dioulasso", "Houndé", "Diébougou", "Gaoua", "Banfora", "Orodara", "Niangoloko"] },
+  { zone: 3, localities: ["Zorgho", "Koupéla", "Tenkodogo", "Pouytenga", "Fada N'Gourma", "Bogandé"] },
+  { zone: 4, localities: ["Koudougou", "Boromo", "Solenzo", "Dédougou", "Tougan", "Nouna"] },
+  { zone: 5, localities: ["Ouahigouya", "Yako", "Gourcy"] },
+  { zone: 6, localities: ["Kaya", "Kongoussi"] },
+];
+
+// Support & Assistance — deux offres complémentaires de Proxy, au-delà de la
+// gestion d'incident : renfort d'équipe et exploitation déléguée du SI.
+export const PROXY_SUPPORT_SERVICES = [
+  {
+    slug: "delegation",
+    title: "Délégation",
+    icon: SERVICE_ICONS.delegation,
+    image: SERVICE_PHOTOS.delegation,
+    items: [
+      "Intérim projets",
+      "Régie d'experts",
+      "Offshore à la demande",
+      "Appoint de ressources I.T",
+      "NearShore à la demande",
+    ],
+  },
+  {
+    slug: "services-manages",
+    title: "Services managés",
+    icon: SERVICE_ICONS.managed,
+    image: SERVICE_PHOTOS.managed,
+    items: [
+      "T.M. Applicative",
+      "Support ponctuel",
+      "Cyber Supervision",
+      "Infogérance des S.I.",
+      "Maintenance hard/soft",
+    ],
+  },
 ];

@@ -232,6 +232,56 @@ export default function ProxyStyles() {
         .ba-prx-levels-grid { grid-template-columns: 1fr; }
       }
 
+      /* Zones d'intervention — présence territoriale */
+      .ba-prx-zones-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .ba-prx-zone-card {
+        background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 18px;
+        padding: 24px; transition: transform .25s ease, border-color .25s ease;
+      }
+      .ba-prx-zone-card:hover {
+        transform: translateY(-4px); border-color: color-mix(in srgb, var(--prx-accent) 50%, transparent);
+      }
+      .ba-prx-zone-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 6px 16px; border-radius: 999px; margin-bottom: 16px;
+        background: linear-gradient(135deg, var(--prx-accent), var(--prx-accent-2));
+        color: #ffffff; font-weight: 700; font-size: 13px;
+      }
+      .ba-prx-zone-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+      .ba-prx-zone-card li {
+        font-size: 13.5px; color: var(--text); display: flex; gap: 8px; align-items: baseline;
+      }
+      .ba-prx-zone-card li::before { content: '▸'; color: var(--prx-accent); }
+      @media (max-width: 900px) { .ba-prx-zones-grid { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 640px) { .ba-prx-zones-grid { grid-template-columns: 1fr; } }
+
+      /* Support & Assistance — Délégation / Services managés */
+      .ba-prx-support-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+      .ba-prx-support-card {
+        background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 22px;
+        overflow: hidden; position: relative; transition: transform .25s ease, border-color .25s ease;
+      }
+      .ba-prx-support-card:hover {
+        transform: translateY(-4px); border-color: color-mix(in srgb, var(--prx-accent) 50%, transparent);
+      }
+      .ba-prx-support-photo { width: 100%; height: 190px; object-fit: cover; display: block; }
+      .ba-prx-support-icon {
+        width: 52px; height: 52px; border-radius: 14px; margin: -30px 26px 18px;
+        display: flex; align-items: center; justify-content: center; position: relative; z-index: 1;
+        background: linear-gradient(135deg, var(--prx-accent), var(--prx-accent-2));
+        padding: 11px; box-shadow: 0 10px 22px rgba(10,14,23,.2);
+      }
+      .ba-prx-support-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+      .ba-prx-support-card h3 { font-size: 19px; font-weight: 700; margin: 0 26px 14px; }
+      .ba-prx-support-card ul {
+        list-style: none; margin: 0; padding: 0 26px 26px; display: flex; flex-direction: column; gap: 9px;
+      }
+      .ba-prx-support-card li {
+        font-size: 14px; color: var(--text); display: flex; gap: 8px; align-items: baseline;
+      }
+      .ba-prx-support-card li::before { content: '▸'; color: var(--prx-accent); }
+      @media (max-width: 720px) { .ba-prx-support-grid { grid-template-columns: 1fr; } }
+
       /* Box animation teinté brun (icône hexagonale de la marque) */
       .ba-prx-box-animation {
         filter: brightness(0) invert(1) drop-shadow(0 14px 24px rgba(255,255,255,.22));
