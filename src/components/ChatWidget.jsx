@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 
 const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8787/api/chat";
@@ -18,6 +19,72 @@ const GREETING = {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// L'assistant répond en Markdown léger (liens, **gras**, listes à puces) — on le
+// convertit en JSX plutôt que de l'afficher tel quel, et les liens internes (/...)
+// utilisent le routeur pour naviguer sans recharger la page.
+function renderInline(text, keyPrefix, onNavigate) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g).filter(Boolean);
+  return parts.map((part, i) => {
+    const key = `${keyPrefix}-${i}`;
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (linkMatch) {
+      // Le libellé peut lui-même contenir du **gras** — on l'enlève, le lien est déjà
+      // mis en évidence visuellement (couleur + soulignement) sans avoir besoin du gras.
+      const label = linkMatch[1].replace(/\*\*/g, "");
+      const url = linkMatch[2];
+      if (url.startsWith("/")) {
+        return (
+          <Link key={key} to={url} className="ba-chat-link" onClick={onNavigate}>
+            {label}
+          </Link>
+        );
+      }
+      return (
+        <a key={key} className="ba-chat-link" href={url} target="_blank" rel="noopener noreferrer">
+          {label}
+        </a>
+      );
+    }
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
+    if (boldMatch) return <strong key={key}>{boldMatch[1]}</strong>;
+    return part;
+  });
+}
+
+function renderMessageContent(content, onNavigate) {
+  const lines = content.split("\n");
+  const blocks = [];
+  let currentList = null;
+
+  for (const line of lines) {
+    const bulletMatch = line.match(/^\s*[*-]\s+(.*)/);
+    if (bulletMatch) {
+      if (!currentList) {
+        currentList = [];
+        blocks.push({ type: "list", items: currentList });
+      }
+      currentList.push(bulletMatch[1]);
+    } else {
+      currentList = null;
+      if (line.trim() !== "") blocks.push({ type: "text", text: line });
+    }
+  }
+
+  return blocks.map((block, i) =>
+    block.type === "list" ? (
+      <ul className="ba-chat-list-inner" key={i}>
+        {block.items.map((item, j) => (
+          <li key={j}>{renderInline(item, `${i}-${j}`, onNavigate)}</li>
+        ))}
+      </ul>
+    ) : (
+      <p className="ba-chat-line" key={i}>
+        {renderInline(block.text, `${i}`, onNavigate)}
+      </p>
+    )
+  );
 }
 
 async function fetchChat(body) {
@@ -175,6 +242,15 @@ export default function ChatWidget() {
           background: linear-gradient(135deg, var(--ba-chat-accent-1), var(--ba-chat-accent-2));
           color: #ffffff; border-bottom-right-radius: 4px;
         }
+        .ba-chat-line { margin: 0 0 8px; }
+        .ba-chat-line:last-child { margin-bottom: 0; }
+        .ba-chat-list-inner { margin: 4px 0 8px; padding-left: 18px; }
+        .ba-chat-list-inner:last-child { margin-bottom: 0; }
+        .ba-chat-list-inner li { margin-bottom: 4px; }
+        .ba-chat-link {
+          color: var(--ba-chat-accent-1); font-weight: 700; text-decoration: underline;
+          text-underline-offset: 2px; word-break: break-word;
+        }
         .ba-chat-typing {
           align-self: flex-start; display: inline-flex; gap: 4px; padding: 12px 14px;
           background: var(--ba-chat-bg-dim); border-radius: 14px; border-bottom-left-radius: 4px;
@@ -241,7 +317,7 @@ export default function ChatWidget() {
           <div className="ba-chat-list" ref={listRef}>
             {messages.map((m, i) => (
               <div key={i} className={`ba-chat-msg ${m.role}`}>
-                {m.content}
+                {m.role === "assistant" ? renderMessageContent(m.content, () => setOpen(false)) : m.content}
               </div>
             ))}
             {loading && (
