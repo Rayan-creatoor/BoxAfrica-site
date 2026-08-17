@@ -162,7 +162,7 @@ export const ACADEMY_CATEGORIES = [
   },
   {
     slug: "odoo",
-    icon: "/icons/odoo-modules.svg",
+    icon: VENDOR_LOGOS.odoo,
     color: "#345fc7",
     title: "Odoo",
     desc: "Prise en main, administration et développement sur l'ERP open source Odoo, pour vos équipes métier comme pour vos développeurs.",

@@ -3,17 +3,44 @@ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 
 const CHAT_API_URL = import.meta.env.VITE_CHAT_API_URL || "http://localhost:8787/api/chat";
 
+// Le serveur (plan gratuit) peut se mettre en veille et mettre jusqu'à ~50s à se
+// réveiller — si la requête échoue au niveau réseau (coupure pendant le réveil), on
+// retente plusieurs fois avec un délai croissant, pour couvrir toute cette fenêtre.
+const REQUEST_TIMEOUT_MS = 20000;
+const RETRY_DELAYS_MS = [3000, 6000, 10000, 15000];
+const SLOW_HINT_DELAY_MS = 5000;
+
 const GREETING = {
   role: "assistant",
   content:
     "Bonjour 👋 Je suis l'assistant de Box.Africa. Posez-moi vos questions sur nos services IT, la cybersécurité, Microsoft, ou les formations BoxAcademy.",
 };
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchChat(body) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    return await fetch(CHAT_API_URL, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([GREETING]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [slowHint, setSlowHint] = useState(false);
   const [error, setError] = useState(null);
   const listRef = useRef(null);
   const inputRef = useRef(null);
@@ -33,20 +60,27 @@ export default function ChatWidget() {
     if (!text || loading) return;
 
     const nextMessages = [...messages, { role: "user", content: text }];
+    const payload = { messages: nextMessages.filter((m) => m !== GREETING) };
     setMessages(nextMessages);
     setInput("");
     setError(null);
     setLoading(true);
 
+    const slowTimer = setTimeout(() => setSlowHint(true), SLOW_HINT_DELAY_MS);
+
+    let res;
     try {
-      const res = await fetch(CHAT_API_URL, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          // On n'envoie pas le message d'accueil statique, seulement l'échange réel.
-          messages: nextMessages.filter((m) => m !== GREETING),
-        }),
-      });
+      // Coupures réseau (souvent le serveur qui se réveille) : on retente plusieurs
+      // fois avec un délai croissant avant d'afficher une erreur au visiteur.
+      for (let attempt = 0; ; attempt++) {
+        try {
+          res = await fetchChat(payload);
+          break;
+        } catch (networkErr) {
+          if (networkErr.name === "AbortError" || attempt >= RETRY_DELAYS_MS.length) throw networkErr;
+          await sleep(RETRY_DELAYS_MS[attempt]);
+        }
+      }
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -56,8 +90,14 @@ export default function ChatWidget() {
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply || "…" }]);
     } catch (err) {
-      setError(err.message || "Impossible de contacter l'assistant pour le moment.");
+      const message =
+        err.name === "AbortError"
+          ? "L'assistant met trop de temps à répondre. Réessayez dans un instant."
+          : err.message || "Impossible de contacter l'assistant pour le moment.";
+      setError(message);
     } finally {
+      clearTimeout(slowTimer);
+      setSlowHint(false);
       setLoading(false);
     }
   }
@@ -149,6 +189,10 @@ export default function ChatWidget() {
           0%, 60%, 100% { transform: translateY(0); opacity: .5; }
           30% { transform: translateY(-4px); opacity: 1; }
         }
+        .ba-chat-slow-hint {
+          align-self: flex-start; font-size: 11.5px; color: var(--ba-chat-text-dim);
+          padding: 0 4px; font-style: italic;
+        }
 
         .ba-chat-error {
           margin: 0 16px 8px; padding: 8px 12px; border-radius: 10px; font-size: 12.5px;
@@ -201,9 +245,16 @@ export default function ChatWidget() {
               </div>
             ))}
             {loading && (
-              <div className="ba-chat-typing" aria-label="L'assistant écrit…">
-                <span /><span /><span />
-              </div>
+              <>
+                <div className="ba-chat-typing" aria-label="L'assistant écrit…">
+                  <span /><span /><span />
+                </div>
+                {slowHint && (
+                  <span className="ba-chat-slow-hint">
+                    Le serveur se réveille, ça peut prendre quelques secondes…
+                  </span>
+                )}
+              </>
             )}
           </div>
 

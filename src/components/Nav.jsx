@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { to: "/services", label: "Services", match: "/services" },
   { to: "/academy", label: "Academy", match: "/academy" },
   { to: "/proxy", label: "Proxy", match: "/proxy" },
+  { to: "/blog", label: "Blog", match: "/blog" },
 ];
 
 function HoursBadge() {

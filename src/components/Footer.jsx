@@ -9,6 +9,7 @@ import {
   LINKEDIN_URL,
   WHATSAPP_ICON,
   BUSINESS_HOURS,
+  REGIONAL_OFFICES,
   mailtoHref,
   whatsappHref,
   SERVICES,
@@ -17,9 +18,12 @@ import {
 const DISCOVER_LINKS = [
   { to: "/academy", label: "BoxAcademy" },
   { to: "/proxy", label: "Proxy" },
+  { to: "/blog", label: "Blog" },
   { to: "/#secteurs", label: "Nos partenaires" },
   { to: "/#equipe", label: "Équipe" },
 ];
+
+const OPEN_DAYS = BUSINESS_HOURS.filter((h) => h.open);
 
 export default function Footer() {
   return (
@@ -105,11 +109,31 @@ export default function Footer() {
       </div>
 
       <div className="ba-footer-hours-strip">
-        {BUSINESS_HOURS.map((h) => (
+        {OPEN_DAYS.map((h) => (
           <span key={h.day} className="ba-footer-hours-item">
-            <strong>{h.day.slice(0, 3)}</strong> {h.open ? `${h.open}–${h.close}` : "Fermé"}
+            <strong>{h.day.slice(0, 3)}</strong> {h.open}–{h.close}
           </span>
         ))}
+      </div>
+
+      <div className="ba-footer-offices">
+        <span className="ba-footer-offices-title">Box.Africa en Afrique de l'Ouest</span>
+        <div className="ba-footer-office-grid">
+          {REGIONAL_OFFICES.map((o) => (
+            <div className="ba-footer-office-card" key={o.code}>
+              <span className="ba-footer-office-flag" aria-hidden="true">
+                {o.flag}
+              </span>
+              <h4>
+                {o.city}, {o.country}
+              </h4>
+              <address>{o.address}</address>
+              <a href={`tel:${o.phone.replace(/\s+/g, "")}`}>
+                <Phone size={12} /> {o.phone}
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="ba-footer-bottom">

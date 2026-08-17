@@ -353,11 +353,7 @@ export default function Home() {
       <div className="ba-cta-band" id="contact" data-reveal style={ctaBandStyle(TECH_PHOTOS.innovation)}>
         <div className="ba-cta-box">
           <img className="ba-box-animation" src={BOXAFRICA_BOX} alt="" />
-          <h2 style={{ marginTop: 18 }}>Un projet IT à transformer ?</h2>
-          <p>
-            Parlons de votre contexte — conseil, développement, cybersécurité ou formation — et construisons
-            la prochaine étape ensemble.
-          </p>
+          <h2 style={{ marginTop: 18, marginBottom: 30 }}>Un projet IT à transformer ?</h2>
           <a href={mailtoHref()} className="ba-btn-primary">
             Discutons-en <ArrowUpRight size={16} />
           </a>

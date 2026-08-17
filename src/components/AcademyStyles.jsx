@@ -142,6 +142,8 @@ export default function AcademyStyles() {
         color: #000000;
       }
       .ba-aca-cat-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+      /* Catégorie Odoo : vrai logo partenaire (fond blanc pour rester lisible) plutôt qu'un pictogramme générique */
+      #odoo .ba-aca-cat-icon { background: #ffffff; padding: 9px; }
       .ba-aca-cat-head h3 { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; margin-bottom: 6px; }
       .ba-aca-cat-head p { color: var(--text-dim); font-size: 14.5px; margin: 0; line-height: 1.55; }
 
@@ -172,6 +174,9 @@ export default function AcademyStyles() {
         margin-bottom: 14px;
       }
       .ba-aca-course-logo img { height: 16px; width: auto; max-width: 110px; display: block; object-fit: contain; }
+      /* Logo Odoo agrandi dans ses cartes de formation, pour rester bien identifiable */
+      #odoo .ba-aca-course-logo { height: 40px; padding: 6px 16px; }
+      #odoo .ba-aca-course-logo img { height: 26px; max-width: 140px; }
       .ba-aca-course-type {
         display: inline-flex; align-items: center; gap: 6px;
         font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--cat-color);

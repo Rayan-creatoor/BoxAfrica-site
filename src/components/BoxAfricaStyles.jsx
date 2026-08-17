@@ -96,9 +96,11 @@ export default function BoxAfricaStyles() {
         font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
         color: var(--text-dim); padding-left: 2px;
       }
-      .ba-navlinks { display: flex; gap: 36px; margin-left: 56px; }
+      .ba-navlinks { display: flex; align-items: center; gap: 28px; margin-left: 40px; }
       .ba-navlinks a {
+        display: inline-flex; align-items: center;
         color: var(--text-dim); text-decoration: none; font-size: 14.5px; font-weight: 500;
+        white-space: nowrap; line-height: 1;
         transition: color .2s ease;
       }
       .ba-navlinks a:hover, .ba-navlinks a.active { color: var(--text); }
@@ -552,10 +554,48 @@ export default function BoxAfricaStyles() {
       .ba-footer-social-icon:hover img { opacity: 1; }
 
       .ba-footer-hours-strip {
-        display: flex; flex-wrap: wrap; gap: 10px 22px; padding: 22px 0; border-top: 1px solid var(--border);
+        display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+        gap: 12px 18px; padding: 28px 0; border-top: 1px solid var(--border);
       }
-      .ba-footer-hours-item { font-size: 12.5px; color: var(--text-dim); }
-      .ba-footer-hours-item strong { color: var(--text); margin-right: 5px; }
+      .ba-footer-hours-item {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 13px; color: var(--text-dim);
+        padding: 9px 18px; border-radius: 999px; background: var(--bg-elevated); border: 1px solid var(--border);
+      }
+      .ba-footer-hours-item strong { color: var(--text); font-weight: 700; }
+
+      /* ---- bureaux régionaux (Afrique de l'Ouest) ---- */
+      .ba-footer-offices { padding: 32px 0; border-top: 1px solid var(--border); }
+      .ba-footer-offices-title {
+        display: block; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+        color: var(--text-dim); margin-bottom: 20px; text-align: center;
+      }
+      .ba-footer-office-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      .ba-footer-office-card {
+        background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 16px;
+        padding: 18px 20px; transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      }
+      .ba-footer-office-card:hover {
+        transform: translateY(-3px); border-color: color-mix(in srgb, var(--blue) 45%, transparent);
+        background: var(--bg-elevated-2);
+      }
+      .ba-footer-office-flag { display: block; font-size: 24px; line-height: 1; margin-bottom: 10px; }
+      .ba-footer-office-card h4 { font-size: 14.5px; font-weight: 700; margin: 0 0 6px; color: var(--text); }
+      .ba-footer-office-card address {
+        font-style: normal; font-size: 12.5px; color: var(--text-dim); line-height: 1.55; margin: 0 0 12px;
+      }
+      .ba-footer-office-card a {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-size: 12.5px; font-weight: 600; color: var(--text); text-decoration: none;
+        transition: color .2s ease;
+      }
+      .ba-footer-office-card a:hover { color: var(--blue); }
+      @media (max-width: 900px) {
+        .ba-footer-office-grid { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 520px) {
+        .ba-footer-office-grid { grid-template-columns: 1fr; }
+      }
 
       .ba-footer-bottom {
         padding: 22px 0; border-top: 1px solid var(--border);
@@ -608,6 +648,9 @@ export default function BoxAfricaStyles() {
          base ci-dessus pour gagner la cascade à spécificité égale. */
       .ba-cta-band h2, .ba-panel h3, .ba-photo-overlay h3 { color: #ffffff; }
       .ba-cta-band p, .ba-panel p { color: rgba(255,255,255,.78); }
+      /* Overlay allégé sur la bannière CTA pour laisser transparaître la photo : ombre portée
+         en compensation, pour garder le titre net même sur les zones claires de l'image. */
+      .ba-cta-band h2 { text-shadow: 0 2px 18px rgba(0,0,0,.55), 0 1px 4px rgba(0,0,0,.7); }
       .ba-tag { color: #ffffff; }
       .ba-panel .ba-panel-link { color: #ffffff; }
       .ba-panel .ba-panel-link:hover { color: rgba(255,255,255,.8); }
@@ -623,7 +666,7 @@ export function heroBgStyle(url) {
 
 export function ctaBandStyle(url) {
   return {
-    backgroundImage: `linear-gradient(135deg, rgba(12,12,12,.94), rgba(12,12,12,.90)), url("${url}")`,
+    backgroundImage: `linear-gradient(135deg, rgba(10,10,12,.62), rgba(10,10,12,.56)), url("${url}")`,
   };
 }
 

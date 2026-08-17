@@ -28,6 +28,43 @@ export function whatsappHref(message = "Bonjour Box.Africa, je souhaite avoir pl
   return `https://wa.me/226${COMPANY_PHONE.replace(/\s+/g, "")}?text=${encodeURIComponent(message)}`;
 }
 
+// Bureaux régionaux Box.Africa en Afrique de l'Ouest (hors Burkina Faso, déjà affiché
+// comme siège dans "Notre adresse").
+export const REGIONAL_OFFICES = [
+  {
+    code: "BACI",
+    flag: "🇨🇮",
+    country: "Côte d'Ivoire",
+    city: "Abidjan",
+    address: "Cocody, Riviera 3, Av. Yennenga, Osh Build, BP 54 Cidex 3 Abj",
+    phone: "+225 07 79 42 41 01",
+  },
+  {
+    code: "BANE",
+    flag: "🇳🇪",
+    country: "Niger",
+    city: "Niamey",
+    address: "Quartier Kalley Est",
+    phone: "+227 91 14 10 10",
+  },
+  {
+    code: "BASN",
+    flag: "🇸🇳",
+    country: "Sénégal",
+    city: "Dakar",
+    address: "Mermoz, Rue MZ 81",
+    phone: "+221 78 10 88 002",
+  },
+  {
+    code: "BAML",
+    flag: "🇲🇱",
+    country: "Mali",
+    city: "Bamako",
+    address: "Rue CIRA, Hamdallaye ACI 2000",
+    phone: "+223 78 03 54 88",
+  },
+];
+
 export const BUSINESS_HOURS = [
   { day: "Lundi", open: "08:00", close: "17:30" },
   { day: "Mardi", open: "08:00", close: "17:30" },
